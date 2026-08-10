@@ -1,0 +1,7517 @@
+{
+  "schema_version": 1,
+  "signatures": {
+    "DiffusionPlanner.__init__": "(self, encoder_dim: int = 1408, num_poses: int = 7, status_dim: int = 7, hidden_dim: int = 256, depth: int = 4, heads: int = 8, dropout: float = 0.0, mlp_ratio: float = 4.0, traj_dim: int = 6, sde_beta_min: float = 0.1, sde_beta_max: float = 20.0, num_samples: int = 6, inference_steps: int = 2, use_z_context: bool = False, tokens_per_frame: int = 256, trajectory_token_mode: str = 'single_token', use_last_frame_only: bool = True, use_action_history: bool = False, action_history_dim: int = 3, num_observed_frames: int = 1, observed_token_mode: Optional[str] = None, num_modes: int = 1, independent_modes: bool = False, use_anchor_frame: bool = False, cls_loss_weight: float = 1.0, reg_loss_weight: float = 1.0, vel_loss_weight: float = 0.5, yaw_loss_weight: float = 0.5, reg_timestep_weights: Optional[torch.Tensor] = None, awta_init_temperature: float = 8.0, awta_min_temperature: float = 0.1, conf_temperature: float = 1.5, cls_th: float = 2.0, cls_ignore: float = 0.2, command_dim: int = 0, adaln_version: str = 'legacy', mode_token_expansion: bool = False)",
+    "DiffusionPlanner.forward": "(self, z_ar: torch.Tensor, status_feature: torch.Tensor, z_context: Optional[torch.Tensor] = None, z_observed: Optional[torch.Tensor] = None, action_history: Optional[torch.Tensor] = None, gt_trajectory: Optional[torch.Tensor] = None, anchor_state: Optional[torch.Tensor] = None, inference_noise: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner.set_awta_temperature": "(self, T: float) -> None",
+    "DiffusionPlanner.convert_3d_to_6d": "(traj_3d: torch.Tensor, dt: float = 0.2) -> torch.Tensor",
+    "DiffusionPlanner.convert_3d_to_nd": "(traj_3d: torch.Tensor, dt: float = 0.2, traj_dim: int = 6) -> torch.Tensor",
+    "DiffusionPlanner.init_interleaved_inference_state": "(self, status_feature: torch.Tensor, total_condition_updates: int, anchor_state: Optional[torch.Tensor] = None, inference_noise: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner.advance_interleaved_inference": "(self, state: Dict[str, torch.Tensor], z_ar: torch.Tensor, z_context: Optional[torch.Tensor] = None, z_observed: Optional[torch.Tensor] = None, action_history: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner.finalize_interleaved_inference": "(self, state: Dict[str, torch.Tensor], z_ar: torch.Tensor, z_context: Optional[torch.Tensor] = None, z_observed: Optional[torch.Tensor] = None, action_history: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._prepare_context": "(self, z_ar, z_context=None, z_observed=None, action_history=None)",
+    "DiffusionPlanner._prepare_status": "(self, status_feature)",
+    "DiffusionPlanner._get_anchor": "(self, anchor_state: Optional[torch.Tensor], B: int, device: torch.device) -> torch.Tensor",
+    "DiffusionPlanner._resolve_inference_noise": "(self, inference_noise: Optional[torch.Tensor], *, B: int, K: int, device: torch.device) -> torch.Tensor",
+    "DiffusionPlanner._correct_anchor_xt": "(self, x_t: torch.Tensor, anchor_info: torch.Tensor) -> torch.Tensor",
+    "DiffusionPlanner._convert_6d_to_3d": "(traj_6d: torch.Tensor) -> torch.Tensor",
+    "DiffusionPlanner._convert_nd_to_3d": "(traj_nd: torch.Tensor) -> torch.Tensor",
+    "DiffusionPlanner._xy_regression_loss_per_mode": "(self, pred_xy: torch.Tensor, gt_xy: torch.Tensor) -> torch.Tensor",
+    "DiffusionPlanner._training_forward": "(self, context_tokens: torch.Tensor, status_emb: torch.Tensor, gt_trajectory: torch.Tensor, anchor_state: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._training_forward_independent": "(self, context_tokens: torch.Tensor, status_emb: torch.Tensor, gt_trajectory: torch.Tensor, anchor_state: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._training_forward_multimodal": "(self, context_tokens: torch.Tensor, status_emb: torch.Tensor, gt_trajectory: torch.Tensor, anchor_state: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._inference_forward": "(self, context_tokens: torch.Tensor, status_emb: torch.Tensor, anchor_state: Optional[torch.Tensor] = None, inference_noise: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._inference_forward_independent": "(self, context_tokens: torch.Tensor, status_emb: torch.Tensor, anchor_state: Optional[torch.Tensor] = None, inference_noise: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._inference_forward_multimodal": "(self, context_tokens: torch.Tensor, status_emb: torch.Tensor, anchor_state: Optional[torch.Tensor] = None, inference_noise: Optional[torch.Tensor] = None) -> Dict[str, torch.Tensor]",
+    "DiffusionPlanner._run_interleaved_solver_step": "(self, x_t: torch.Tensor, context_k: torch.Tensor, status_k: torch.Tensor, noise_schedule: app.vjepa_cowa_world_model.diffusion_utils.dpm_solver_pytorch.NoiseScheduleVP, s: torch.Tensor, t: torch.Tensor) -> torch.Tensor",
+    "DiffusionPlanner._interleaved_target_sampling_steps": "(self, completed_condition_updates: int, total_condition_updates: int) -> int",
+    "SDE.__init__": "(self)",
+    "SDE.sde": "(self, x, t)",
+    "SDE.marginal_prob": "(self, x, t)",
+    "SDE.marginal_prob_std": "(self, t)",
+    "SDE.diffusion_coeff": "(self, t)",
+    "VPSDE_linear.__init__": "(self, beta_max=20.0, beta_min=0.1)",
+    "dpm_sampler": "(model: torch.nn.modules.module.Module, x_T, other_model_params: Dict = {}, diffusion_steps=2, noise_schedule_params: Dict = {}, model_wrapper_params: Dict = {}, dpm_solver_params: Dict = {}, sample_params: Dict = {})"
+  },
+  "abstract_methods": [
+    "T",
+    "diffusion_coeff",
+    "marginal_prob",
+    "marginal_prob_std",
+    "sde"
+  ],
+  "profiles": {
+    "legacy_single_6d": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 6,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": true,
+        "observed_token_mode": null
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            18
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            18,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            18
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm2.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            96,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            96
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 6,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 1,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "single_token",
+        "use_last_frame_only": true,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": false,
+        "total_frames": 3,
+        "command_dim": 0,
+        "adaln_version": "legacy",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": true,
+        "_yaw_slice": {
+          "start": 4,
+          "stop": 6,
+          "step": null
+        },
+        "_uses_batch_expansion": true,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": null,
+            "dtype": null,
+            "is_scalar": false,
+            "is_none": true
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              4,
+              18
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                2
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "formal_joint_anchor_v2": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "use_anchor_frame": true,
+        "num_modes": 3
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            12
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            144,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            144
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 0,
+        "adaln_version": "v2",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": false,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              2,
+              48
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "formal_observed_action_v2": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": "concat_type_embed",
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "use_anchor_frame": true,
+        "num_modes": 3,
+        "num_observed_frames": 2,
+        "use_action_history": true,
+        "action_history_dim": 3
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "observed_source_embedding.weight",
+          "shape": [
+            2,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.0.weight",
+          "shape": [
+            3
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.0.bias",
+          "shape": [
+            3
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.1.weight",
+          "shape": [
+            16,
+            3
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_pos_embedding.weight",
+          "shape": [
+            2,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            12
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            144,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            144
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": true,
+        "action_history_dim": 3,
+        "num_observed_frames": 2,
+        "observed_token_mode": "concat_type_embed",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 0,
+        "adaln_version": "v2",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": false,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              2,
+              48
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "command_split_v2": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 8,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "use_anchor_frame": true,
+        "num_modes": 3,
+        "command_dim": 4
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "command_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "command_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "command_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "command_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "kinematics_proj.0.weight",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "kinematics_proj.0.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "kinematics_proj.1.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "kinematics_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "kinematics_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "kinematics_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            12
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            144,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            144
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 4,
+        "adaln_version": "v2",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": false,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              2,
+              48
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "independent_modes": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "use_anchor_frame": true,
+        "num_modes": 3,
+        "independent_modes": true
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            144,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            144
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.context_query",
+          "shape": [
+            1,
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.xy_norm.weight",
+          "shape": [
+            2
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.xy_norm.bias",
+          "shape": [
+            2
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.yaw_norm.weight",
+          "shape": [
+            2
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.yaw_norm.bias",
+          "shape": [
+            2
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.traj_encoder.0.weight",
+          "shape": [
+            128,
+            12
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.traj_encoder.0.bias",
+          "shape": [
+            128
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.traj_encoder.2.weight",
+          "shape": [
+            128,
+            128
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.traj_encoder.2.bias",
+          "shape": [
+            128
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.scorer.0.weight",
+          "shape": [
+            128,
+            144
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.scorer.0.bias",
+          "shape": [
+            128
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.scorer.2.weight",
+          "shape": [
+            1,
+            128
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "confidence_head.scorer.2.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": true,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 0,
+        "adaln_version": "v2",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": true,
+        "_batch_K": 3,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": null,
+            "dtype": null,
+            "is_scalar": false,
+            "is_none": true
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              6,
+              16
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "mode_token_expansion": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "use_anchor_frame": true,
+        "num_modes": 3,
+        "mode_token_expansion": true
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.mode_embed",
+          "shape": [
+            1,
+            3,
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            144,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            144
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 0,
+        "adaln_version": "v2",
+        "mode_token_expansion": true,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": false,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              2,
+              48
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "adaln_v3": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v3",
+        "use_anchor_frame": true,
+        "num_modes": 3
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            12
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm2.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp1.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            96,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            96
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp2.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 0,
+        "adaln_version": "v3",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": false,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              2,
+              48
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    },
+    "weighted_regression": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "use_anchor_frame": true,
+        "num_modes": 3,
+        "reg_timestep_weights": {
+          "shape": [
+            3
+          ],
+          "dtype": "torch.float32"
+        }
+      },
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            16,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            4,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            32,
+            12
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            64,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            64
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            16,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            48,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            48
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            32,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            16,
+            32
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            144,
+            16
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            144
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "named_buffers": [
+        {
+          "name": "reg_timestep_weights",
+          "shape": [
+            3
+          ],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        },
+        {
+          "name": "awta_temperature",
+          "shape": [],
+          "dtype": "torch.float32",
+          "in_state_dict": false
+        }
+      ],
+      "attributes": {
+        "training": true,
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "traj_dim": 4,
+        "hidden_dim": 16,
+        "num_samples": 2,
+        "num_modes": 3,
+        "independent_modes": false,
+        "inference_steps": 3,
+        "use_z_context": false,
+        "tokens_per_frame": 2,
+        "trajectory_token_mode": "per_pose_token",
+        "use_last_frame_only": false,
+        "use_action_history": false,
+        "action_history_dim": 3,
+        "num_observed_frames": 1,
+        "observed_token_mode": "concat",
+        "use_observed_tokens": true,
+        "use_anchor_frame": true,
+        "total_frames": 4,
+        "command_dim": 0,
+        "adaln_version": "v2",
+        "mode_token_expansion": false,
+        "cls_loss_weight": 1.0,
+        "reg_loss_weight": 1.0,
+        "vel_loss_weight": 0.5,
+        "yaw_loss_weight": 0.5,
+        "awta_min_temperature": 0.1,
+        "conf_temperature": 1.5,
+        "cls_th": 2.0,
+        "cls_ignore": 0.2,
+        "_has_velocity": false,
+        "_yaw_slice": {
+          "start": 2,
+          "stop": 4,
+          "step": null
+        },
+        "_uses_batch_expansion": false,
+        "_batch_K": 2,
+        "dit.model_type": "x_start"
+      },
+      "dit_forward_contract": {
+        "signature": "(self, x, t, cross_c, status_emb)",
+        "fields": [
+          {
+            "name": "classification",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          },
+          {
+            "name": "prediction",
+            "shape": [
+              2,
+              48
+            ],
+            "dtype": "torch.float32",
+            "is_scalar": false,
+            "is_none": false
+          }
+        ]
+      },
+      "forward_contracts": {
+        "train": {
+          "fields": [
+            {
+              "name": "loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "reg_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "conf_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cover_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "vel_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "yaw_loss",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "winner_idx",
+              "shape": [
+                2
+              ],
+              "dtype": "torch.int64",
+              "is_scalar": false
+            },
+            {
+              "name": "winner_traj_3d",
+              "shape": [
+                2,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "awta_temperature",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            },
+            {
+              "name": "cls_sample_valid_ratio",
+              "shape": [],
+              "dtype": "torch.float32",
+              "is_scalar": true
+            }
+          ]
+        },
+        "eval": {
+          "fields": [
+            {
+              "name": "trajectories",
+              "shape": [
+                2,
+                3,
+                3,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            },
+            {
+              "name": "confidences",
+              "shape": [
+                2,
+                3
+              ],
+              "dtype": "torch.float32",
+              "is_scalar": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "invalid_cases": {
+    "invalid_trajectory_token_mode": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "invalid"
+      },
+      "exception_class": "ValueError"
+    },
+    "invalid_adaln_version": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "adaln_version": "invalid"
+      },
+      "exception_class": "ValueError"
+    },
+    "invalid_observed_token_mode": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": "invalid"
+      },
+      "exception_class": "ValueError"
+    },
+    "single_token_mode_expansion": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "mode_token_expansion": true,
+        "num_modes": 3
+      },
+      "exception_class": "ValueError"
+    },
+    "independent_mode_expansion": {
+      "kwargs": {
+        "encoder_dim": 8,
+        "num_poses": 3,
+        "status_dim": 4,
+        "hidden_dim": 16,
+        "depth": 1,
+        "heads": 4,
+        "dropout": 0.0,
+        "mlp_ratio": 2.0,
+        "traj_dim": 4,
+        "num_samples": 2,
+        "inference_steps": 3,
+        "tokens_per_frame": 2,
+        "use_last_frame_only": false,
+        "observed_token_mode": null,
+        "trajectory_token_mode": "per_pose_token",
+        "adaln_version": "v2",
+        "num_modes": 3,
+        "independent_modes": true,
+        "mode_token_expansion": true
+      },
+      "exception_class": "ValueError"
+    }
+  },
+  "sampler_contract": {
+    "fields": [
+      {
+        "name": "classification",
+        "shape": null,
+        "dtype": null,
+        "is_scalar": false,
+        "is_none": true,
+        "device": null
+      },
+      {
+        "name": "sampled",
+        "shape": [
+          2,
+          3,
+          4
+        ],
+        "dtype": "torch.float32",
+        "is_scalar": false,
+        "is_none": false,
+        "device": "cpu"
+      }
+    ]
+  },
+  "sde_contract": {
+    "T": 1.0,
+    "has__beta_min": true,
+    "has__beta_max": true,
+    "is_torch_nn_module": false,
+    "has_state_dict": false,
+    "method_outputs": {
+      "sde": [
+        {
+          "name": "drift",
+          "shape": [
+            2,
+            3,
+            4
+          ],
+          "dtype": "torch.float32",
+          "is_scalar": false,
+          "is_none": false
+        },
+        {
+          "name": "diffusion",
+          "shape": [
+            2,
+            1,
+            1
+          ],
+          "dtype": "torch.float32",
+          "is_scalar": false,
+          "is_none": false
+        }
+      ],
+      "marginal_prob": [
+        {
+          "name": "mean",
+          "shape": [
+            2,
+            3,
+            4
+          ],
+          "dtype": "torch.float32",
+          "is_scalar": false,
+          "is_none": false
+        },
+        {
+          "name": "std",
+          "shape": [
+            2,
+            1,
+            1
+          ],
+          "dtype": "torch.float32",
+          "is_scalar": false,
+          "is_none": false
+        }
+      ],
+      "marginal_prob_std": [
+        {
+          "name": "std",
+          "shape": [
+            2
+          ],
+          "dtype": "torch.float32",
+          "is_scalar": false,
+          "is_none": false
+        }
+      ],
+      "diffusion_coeff": [
+        {
+          "name": "diffusion",
+          "shape": [
+            2
+          ],
+          "dtype": "torch.float32",
+          "is_scalar": false,
+          "is_none": false
+        }
+      ]
+    }
+  },
+  "factory_profiles": {
+    "formal_v2_e120_factory": {
+      "config_path": "configs/train/navsim/cvoi_manual_full/02_p0_uniform.yaml",
+      "encoder_dim": 1024,
+      "state_dict": [
+        {
+          "name": "context_proj.0.weight",
+          "shape": [
+            1024
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.0.bias",
+          "shape": [
+            1024
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.weight",
+          "shape": [
+            384,
+            1024
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.1.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "context_proj.3.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "observed_source_embedding.weight",
+          "shape": [
+            2,
+            1024
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.weight",
+          "shape": [
+            384,
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.0.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "status_proj.2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.0.weight",
+          "shape": [
+            3
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.0.bias",
+          "shape": [
+            3
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.1.weight",
+          "shape": [
+            384,
+            3
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.1.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.3.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_proj.3.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "action_history_pos_embedding.weight",
+          "shape": [
+            2,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.pose_embed",
+          "shape": [
+            1,
+            9,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.weight",
+          "shape": [
+            256,
+            24
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc1.bias",
+          "shape": [
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.weight",
+          "shape": [
+            384,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.preproj.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.norm_final.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.weight",
+          "shape": [
+            768,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.adaLN_modulation.1.bias",
+          "shape": [
+            768
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.0.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.1.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.3.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.weight",
+          "shape": [
+            2304,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.proj.4.bias",
+          "shape": [
+            2304
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.0.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.1.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.3.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.4.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.weight",
+          "shape": [
+            1,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.cls.6.bias",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.0.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.weight",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.3.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.weight",
+          "shape": [
+            4,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.final_layer.reg.4.bias",
+          "shape": [
+            4
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.weight",
+          "shape": [
+            384,
+            256
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.0.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.t_embedder.mlp.2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.0.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.1.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.2.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.3.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.4.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.5.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.6.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.7.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.8.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.9.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.10.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.cross_attn.in_proj_weight",
+          "shape": [
+            1152,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.cross_attn.in_proj_bias",
+          "shape": [
+            1152
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.cross_attn.out_proj.weight",
+          "shape": [
+            384,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.cross_attn.out_proj.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.norm_cond.weight",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.norm_cond.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.mlp.fc1.weight",
+          "shape": [
+            1536,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.mlp.fc1.bias",
+          "shape": [
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.mlp.fc2.weight",
+          "shape": [
+            384,
+            1536
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.mlp.fc2.bias",
+          "shape": [
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.adaLN_modulation.1.weight",
+          "shape": [
+            3456,
+            384
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "name": "dit.blocks.11.adaLN_modulation.1.bias",
+          "shape": [
+            3456
+          ],
+          "dtype": "torch.float32"
+        }
+      ]
+    }
+  }
+}

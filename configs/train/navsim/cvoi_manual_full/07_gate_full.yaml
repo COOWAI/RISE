@@ -1,0 +1,384 @@
+app: vjepa_cowa_world_model
+cpus_per_task: 12
+folder: /path/to/rise/results/cvoi_manual_full/gate
+mem_per_gpu: 81G
+nodes: 1
+tasks_per_node: 1
+data:
+  batch_size: 16
+  crop_size: 256
+  dataset_fpcs:
+  - 12
+  fps: 2
+  num_workers: 4
+  patch_size: 16
+  num_target_frames: 12
+  pin_mem: true
+  tubelet_size: 2
+  persistent_workers: true
+  use_tubelet_repeat: true
+  datasets: []
+  val_datasets: null
+  camera_frame: false
+  camera_views:
+  - left_mp4_path
+  stereo_view: false
+  bench2drive: null
+  mongo_raw: null
+multiview:
+  enabled: false
+  fusion_type: petr_cross_attn
+  hidden_dim: 512
+  num_heads: 8
+  dropout: 0.0
+data_aug:
+  horizontal_flip: false
+  random_resize_aspect_ratio:
+  - 0.75
+  - 1.35
+  random_resize_scale:
+  - 1.777
+  - 1.777
+  motion_shift: false
+  reprob: 0.0
+  auto_augment: false
+loss:
+  loss_exp: 1.0
+  normalize_reps: false
+  auto_steps: null
+meta:
+  resume_checkpoint: null
+  pretrain_checkpoint: null
+  pretrain_checkpoint_full: null
+  predictor_checkpoint: null
+  value_checkpoint: null
+  planner_value_checkpoint: null
+  ae_checkpoint: null
+  load_encoder: false
+  load_predictor: false
+  load_planner: false
+  load_seg: false
+  pretrain_repo: null
+  deterministic: false
+  val_stable_noise: true
+  predictor_runtime_normalize_reps: null
+  selection_checkpoint_epochs: []
+  save_from_epoch: 0
+  sync_gc: false
+  resume_broadcast: false
+  resume_model_only: false
+  auto_resume_latest: false
+  seed: 239
+  dtype: bfloat16
+  use_sdpa: true
+  context_encoder_key: encoder
+  target_encoder_key: target_encoder
+  save_every_freq: 10
+  val_freq: 5
+model:
+  use_silu: false
+  use_pred_silu: false
+  wide_silu: true
+  use_mask_tokens: false
+  zero_init_mask_tokens: true
+  compile_model: false
+  model_name: vit_large
+  backbone: vjepa_img_encoder
+  vjepa_resolution:
+  - 256
+  - 512
+  vjepa_crop_top_bottom: 28
+  vjepa_num_frames: 2
+  vjepa_checkpoint_key: encoder
+  vjepa_use_grid_mask: false
+  vjepa_use_causal_attention: true
+  patch_size: 16
+  pred_depth: 12
+  pred_num_heads: 12
+  pred_embed_dim: 384
+  pred_is_frame_causal: true
+  uniform_power: true
+  use_rope: true
+  use_extrinsics: false
+  use_activation_checkpointing: true
+optimization:
+  anneal: 0
+  epochs: 50
+  final_lr: 0.0
+  final_weight_decay: 0.04
+  enc_lr_scale: 1.0
+  ipe: null
+  lr: 0.001
+  start_lr: 0.001
+  warmup: 0
+  weight_decay: 0.04
+  grad_clip_norm: 1.0
+  is_anneal: false
+  anneal_ckpt: null
+  resume_anneal: false
+  ipe_scale: 1.0
+  optimizer: adamw
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  predictor_lr_scale: 1.0
+  schedule_epochs: 50
+ema:
+  ema_start: 0.996
+  ema_end: 0.999
+segmentation:
+  use_segmentation: false
+  seg_loss_weight: 0.0
+train:
+  command_dim: 0
+  predictor_validation_enabled: false
+  predictor_static_graph: false
+  reuse_context_as_target_when_frozen: false
+  predictor_no_aux_input: false
+  latent_dit_planner_input: train_helper
+  predictor_type: ac_transformer
+  num_observed_frames: 4
+  action_dim: 3
+  state_dim: 8
+  use_states_for_predictor: false
+  predictor_aux_policy: inference_consistent
+  predictor_inference_consistent: true
+  predictor_loss_scope: future_only
+  predictor_supervision_mode: tf_ar
+  predictor_use_z_ar_supervision: true
+  use_parallel_predictor: false
+  encoder_train: false
+  seg_head: false
+  encoder_ema: false
+  perceiver_ema: false
+  predictor_train: false
+  predictor_planner_finetune: false
+  use_drive_command: false
+  num_encoder_frames: 4
+planner:
+  use_spatial_tokens: false
+  use_temporal: false
+  temporal_alignment: true
+  z_ar_mode: full
+  planner_input_source: z_ar
+  num_modes: 6
+  num_context_frames: 1
+  conf_loss_weight: 1.0
+  reg_loss_weight: 1.0
+  horizon_reg_loss_seconds: []
+  horizon_reg_loss_weights: []
+  horizon_reg_loss_normalize: true
+  states_mode: first
+  use_z_context: false
+  latent_dit_action_source: planner
+  policy_output_source: planner
+  wta_loss_version: v1
+  wta_temperature: 1.0
+  wta_alpha: 5.0
+  wta_global_batch_norm: true
+  cover_loss_weight: 0.1
+  refinement_core_type: null
+  diff_flow_matching_variant: rectified
+  diff_flow_shift: 1.0
+  diff_flow_sampler: euler
+  diff_flow_timestep_sampling: logit_normal
+  use_planner: true
+  planner_type: diffusion
+  planner_loss_weight: 1
+  observed_token_mode: concat_type_embed
+  use_observed_tokens: true
+  use_action_history_for_planner: true
+  action_history_dim: 3
+  use_status_for_planner: true
+  use_states_for_planner: true
+  status_dim: 8
+  split_status_embedding: false
+  use_drive_command: false
+  diff_hidden_dim: 384
+  diff_num_layers: 12
+  diff_num_heads: 12
+  diff_dropout: 0.0
+  diff_mlp_ratio: 4.0
+  diff_sde_beta_min: 0.1
+  diff_sde_beta_max: 20.0
+  diff_inference_steps: 20
+  diff_num_samples: 6
+  diff_num_modes: 6
+  diff_traj_dim: 4
+  diff_dt: 0.5
+  diff_trajectory_token_mode: per_pose_token
+  diff_adaln_version: v2
+  diff_use_last_frame_only: false
+  diff_interleave_predictor_sampling: false
+  diff_train_prefix_conditioning: false
+  diff_train_min_prefix_frames: 1
+  diff_train_full_prefix_prob: 0.25
+  diff_train_max_non_full_prefix_frames: null
+  diff_independent_modes: false
+  diff_mode_token_expansion: false
+  diff_use_anchor_frame: true
+  diff_init_traj_strategy: gaussian
+  diff_init_traj_noise_scale: 1.0
+  diff_init_traj_yaw_span_deg: 30.0
+  diff_init_traj_speed_scale_span: 0.2
+  diff_cls_loss_weight: 1.0
+  diff_reg_loss_weight: 1.0
+  diff_vel_loss_weight: 0.5
+  diff_yaw_loss_weight: 0.5
+  diff_generation_framework: vp_diffusion
+  diff_conf_temperature: 1.5
+  diff_cls_th: 2.0
+  diff_cls_ignore: 0.2
+  awta_init_temperature: 8.0
+  awta_exp_base: 0.984
+  awta_min_temperature: 0.1
+  tf_d_model: 256
+  tf_d_ffn: 1024
+  tf_num_layers: 3
+  tf_num_head: 8
+  tf_dropout: 0.0
+  enable_rl_actor_critic: false
+  rl_action_dim: 2
+validation_suite:
+  enabled: false
+  protocol_version: dynamic_rollout_validation_v2
+  horizons: []
+  expected_weights: []
+  primary_domain: real
+  primary_cohort: all
+  primary_protocol: full
+counterfactual_supervision:
+  enabled: false
+  protocol_version: cf_supervision_v2
+  imitation_policy: real_and_cf_safe
+  world_model_policy: all_valid
+  value_policy: all_valid
+  ego_hazard_types:
+  - 自车行为引起
+  - 非自车行为引起
+  hazard_target_mode: episode_ranking
+  cf_sample_accident_type_allowlist:
+  - 自车行为引起
+  - 非自车行为引起
+  cf_sample_filter_mode: strict_allowlist
+value_planning:
+  enabled: false
+  variant: a_method1
+  prefix_steps: 2
+  gamma: 0.99
+  lambda_return: 0.8
+  bootstrap_horizon: 3
+  progress_weight: 1.0
+  comfort_weight: 0.2
+  value_loss_weight: 1.0
+  td_loss_weight: 1.0
+  safe_floor_weight: 0.05
+  srpo_shaping_weight: 0.0
+  srpo_rho_mode: nearest_accident_latent
+  srpo_potential_based: true
+  pred_consistency_weight: 0.0
+  target_tau: 0.995
+method: lewm
+token_ae:
+  enabled: false
+stage: stage1_trainpose_predictor_monitored
+budget_controller:
+  enabled: false
+  policy_dist: beta
+  lambda_compute: 0.05
+  oracle_budget_grid:
+  - 0.0
+  - 0.2
+  - 0.4
+  - 0.6
+  - 0.8
+  - 1.0
+  schedule:
+    rollout_future_steps:
+    - 1
+    - full
+  hidden_dim: 128
+  feature_dim: 0
+  min_concentration: 1.0
+  bc_mse_weight: 0.1
+predictor_dynamic_rollout:
+  enabled: true
+  full_prefix_prob: 0.2
+  min_prefix_steps: 0
+  max_non_full_prefix_steps: 3
+  horizon_probabilities:
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.2
+  max_horizon: 4
+world_model:
+  enabled: true
+  sigreg_weight: 0.09
+  sigreg_knots: 17
+  sigreg_num_proj: 1024
+  projector_hidden_dim: 2048
+  embed_dim: 192
+  num_subspaces: 1
+  subspace_dim: null
+  init_mode: orthogonal_frozen
+  theta: 0.0
+rl:
+  enabled: false
+value_guidance:
+  enabled: false
+  steps: 2
+  objective: last
+  step_size: 0.05
+  max_delta_norm: 0.25
+  detach_output: true
+cvoi:
+  enabled: true
+  max_agents: 1024
+  protocol_version: formal_v2_navsim_e120_h4_v3
+  schema: cvoi_dual_value_navsim_e120_v1
+  ablation_mode: manual_ablation
+  stage: gate_distillation
+  ablation_signature:
+    schema: cvoi_formal_v2_navsim_e120_ablation_v1
+    protocol_version: formal_v2_navsim_e120_h4_v3
+    experiment_role: main
+    branch_id: full
+    shared_cohort_id: navsim_e120_s239_stride4
+    initialization_mode: full_state_warmstart
+    cf_field_supervision: hazard_quality
+    field_calibration_mode: local_geometry
+    p0_prefix_mode: uniform
+    gate_feature_mode: full
+    train_seed: 239
+    evaluation_seed: 239
+    training_stride: 4
+  guidance_steps: 2
+  guidance_objective: last
+  controller_batch_size: 1
+  controller_lineage: value_guided
+  lambda_compute: 0.005
+  lambda_grid:
+  - 0.0
+  - 0.001
+  - 0.005
+  - 0.01
+  - 0.05
+  gate_training_batch_size: 4096
+  max_horizon: 4
+  rollout_horizons:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  compute_costs:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  oracle_path: /path/to/rise/results/cvoi_manual_full/handoff/oracle_full.sqlite3
+  output_checkpoint: /path/to/rise/results/cvoi_manual_full/handoff/gate.pt

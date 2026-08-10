@@ -1,0 +1,4 @@
+Unnamed: 0,token,valid,no_at_fault_collisions,drivable_area_compliance,driving_direction_compliance,traffic_light_compliance,ego_progress,time_to_collision_within_bound,lane_keeping,history_comfort,two_frame_extended_comfort,score
+0,token-a,True,1.0,0.9,1.0,0.85,0.7,0.8,0.95,0.9,,0.66
+1,token-b,True,0.9,1.0,0.95,1.0,0.8,0.9,0.9,0.95,0.88,0.68
+2,average_all_frames,True,0.95,0.95,0.975,0.925,0.75,0.85,0.925,0.925,0.88,0.67

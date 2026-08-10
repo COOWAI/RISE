@@ -1,0 +1,20 @@
+schema: cvoi_direct_epdms
+version: 1
+branch: full
+run_kind: controller
+split: navtest
+protocol: epdms_v2_one_stage_navtest
+max_horizon: 4
+guidance_steps: 2
+training_config_path: configs/train/navsim/cvoi_manual_full/05_p1_full.yaml
+encoder_checkpoint_path: /path/to/checkpoints/rise/e120.pt
+scenario_manifest_path: /path/to/rise/results/cvoi_manual_full/preflight/scenario_manifest.jsonl
+output_root: /path/to/rise/results/cvoi_manual_epdms/full
+artifacts:
+  p0_planner_checkpoint_path: /path/to/rise/results/cvoi_manual_full/handoff/p0_selected.pt
+  calibration_checkpoint_path: /path/to/rise/results/cvoi_manual_full/handoff/calibration.pt
+  p1_planner_checkpoint_path: /path/to/rise/results/cvoi_manual_full/handoff/p1_selected.pt
+  stop_checkpoint_path: /path/to/rise/results/cvoi_manual_full/handoff/stop.pt
+  gate_checkpoint_path: /path/to/rise/results/cvoi_manual_full/handoff/gate.pt
+  oracle_path: /path/to/rise/results/cvoi_manual_full/handoff/oracle_full.sqlite3
+  gate_feature_mode: full

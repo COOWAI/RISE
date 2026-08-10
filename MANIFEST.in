@@ -1,0 +1,26 @@
+include README.md
+include README_zh-CN.md
+include LICENSE
+include THIRD_PARTY_NOTICES.md
+include CONTRIBUTING.md
+include CODE_OF_CONDUCT.md
+include SECURITY.md
+include CITATION.cff
+include CHANGELOG.md
+include Makefile
+recursive-include licenses *
+recursive-include docs *.md
+recursive-include configs *.md *.yaml *.yml
+recursive-include tools *.py
+include scripts/eval_navsim/eval_navsim_v2_pdms.sh
+
+exclude AGENTS.md
+exclude MINIMAL_FILES.txt
+prune docs/superpowers
+prune tests/preparation
+prune .github/workflows
+prune build
+prune dist
+global-exclude *.py[cod]
+global-exclude __pycache__
+global-exclude .DS_Store

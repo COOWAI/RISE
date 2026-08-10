@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite this software release."
+type: software
+title: "RISE: Adaptive Imagination for World Action Models"
+version: 0.1.0
+authors:
+  - name: RISE Contributors
+license: MIT

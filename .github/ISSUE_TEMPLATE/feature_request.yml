@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose a focused improvement to RISE
+title: "[Feature]: "
+labels: []
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What research or engineering problem should this change solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the interface, behavior, or documentation change you propose.
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Effect on the manual workflow
+      description: Explain whether this affects a CVoI stage, a fixed handoff, or evaluation behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe alternatives or workarounds you considered.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checklist
+      options:
+        - label: This request does not require publishing weights, datasets, private paths, or result values.
+          required: true
+        - label: This request does not introduce automatic scheduling or candidate selection.
+          required: true

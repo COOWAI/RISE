@@ -1,0 +1,294 @@
+app: vjepa_cowa_world_model
+cpus_per_task: 12
+folder: /path/to/rise/results/cvoi_manual_full/predictor
+mem_per_gpu: 81G
+nodes: 1
+tasks_per_node: 8
+data:
+  batch_size: 16
+  crop_size: 256
+  dataset_fpcs:
+  - 12
+  fps: 2
+  num_workers: 4
+  patch_size: 16
+  num_target_frames: 12
+  pin_mem: true
+  tubelet_size: 2
+  persistent_workers: true
+  use_tubelet_repeat: true
+  navsim:
+    enabled: true
+    data_path: /path/to/navsim/dataset/navsim_logs/trainval
+    sensor_blobs_path: /path/to/navsim/dataset/sensor_blobs/trainval
+    train_roots:
+    - name: real
+      domain: real
+      data_path: /path/to/navsim/dataset/navsim_logs/trainval
+      sensor_blobs_path: /path/to/navsim/dataset/sensor_blobs/trainval
+      scene_filter_yaml: configs/navsim/scene_filters/navtrain.yaml
+      index_cache: true
+      window_stride: 1
+      repeat: 1
+    - name: counterfactual
+      domain: counterfactual
+      data_path: /path/to/counterfactual/navsim_logs/trainval
+      sensor_blobs_path: /path/to/counterfactual/sensor_blobs/trainval
+      pose_overlay_path: /path/to/counterfactual/pose_overlay/trainval/pred_pose
+      pose_overlay_coord_frame: opencv_first_frame
+      pose_overlay_txt_start_seconds: 0.0
+      pose_overlay_required: true
+      index_cache: false
+      window_stride: 1
+      tail_seconds: null
+      annotations_path: /path/to/counterfactual/annotations/navsim_train.json
+      annotations_drop_distorted: true
+      annotations_require_trajectory_match: true
+      annotation_selection: all_valid
+      repeat: 1
+    balance_train_roots: true
+    counterfactual_tail_seconds: null
+    camera_name: CAM_F0
+    camera_names:
+    - CAM_F0
+    max_scenes: null
+    val_roots:
+    - name: real
+      dataset_id: navsim-real-test-v1
+      domain: real
+      data_path: /path/to/navsim/dataset/navsim_logs/test
+      sensor_blobs_path: /path/to/navsim/dataset/sensor_blobs/test
+      scene_filter_yaml: configs/navsim/scene_filters/navtest.yaml
+      annotation_selection: all_valid
+      tail_seconds: null
+      pose_overlay_required: false
+    - name: counterfactual
+      dataset_id: navsim-cf-test-v1
+      domain: counterfactual
+      data_path: /path/to/counterfactual/navsim_logs/test
+      sensor_blobs_path: /path/to/counterfactual/sensor_blobs/test
+      pose_overlay_path: /path/to/counterfactual/pose_overlay/test/pred_pose
+      pose_overlay_coord_frame: opencv_first_frame
+      pose_overlay_txt_start_seconds: 0.0
+      pose_overlay_required: true
+      annotations_path: /path/to/counterfactual/annotations/navsim_test.json
+      annotations_drop_distorted: true
+      annotations_require_trajectory_match: true
+      annotation_selection: all_valid
+      tail_seconds: null
+    pose_overlay_coord_frame: opencv_first_frame
+    pose_overlay_required: true
+    max_val_scenes: null
+    index_cache: false
+    window_stride: 1
+    max_frame_gap: 1
+    image_require_policy: all_frames
+multiview:
+  enabled: false
+  fusion_type: petr_cross_attn
+  hidden_dim: 512
+  num_heads: 8
+  dropout: 0.0
+data_aug:
+  auto_augment: false
+  horizontal_flip: false
+  motion_shift: false
+  random_resize_aspect_ratio:
+  - 0.75
+  - 1.35
+  random_resize_scale:
+  - 1.777
+  - 1.777
+  reprob: 0.0
+loss:
+  loss_exp: 1.0
+  normalize_reps: false
+meta:
+  dtype: bfloat16
+  val_freq: 5
+  resume_checkpoint: null
+  load_predictor: false
+  load_encoder: true
+  load_seg: false
+  load_planner: false
+  pretrain_checkpoint: null
+  pretrain_checkpoint_full: /path/to/checkpoints/vitl_merge_3dataset_e50.pt
+  predictor_checkpoint: null
+  resume_model_only: true
+  context_encoder_key: encoder
+  target_encoder_key: target_encoder
+  save_every_freq: 10
+  seed: 239
+  use_sdpa: true
+  value_checkpoint: null
+  ae_checkpoint: null
+model:
+  model_name: vit_large
+  backbone: vjepa_img_encoder
+  vjepa_resolution:
+  - 256
+  - 512
+  vjepa_crop_top_bottom: 28
+  vjepa_num_frames: 2
+  vjepa_checkpoint_key: target_encoder
+  vjepa_use_grid_mask: false
+  vjepa_use_causal_attention: true
+  pred_depth: 12
+  pred_embed_dim: 384
+  pred_is_frame_causal: true
+  pred_num_heads: 12
+  uniform_power: true
+  use_activation_checkpointing: true
+  use_extrinsics: false
+  use_rope: true
+optimization:
+  anneal: 15
+  epochs: 80
+  final_lr: 0.0
+  final_weight_decay: 0.04
+  enc_lr_scale: 0.01
+  ipe: null
+  lr: 0.0002
+  start_lr: 2.0e-05
+  warmup: 8
+  weight_decay: 0.04
+ema:
+  ema_start: 0.996
+  ema_end: 0.999
+segmentation:
+  use_segmentation: false
+  seg_loss_weight: 0.0
+train:
+  encoder_train: true
+  seg_head: false
+  encoder_ema: false
+  perceiver_ema: false
+  predictor_train: true
+  predictor_type: ac_transformer
+  action_dim: 3
+  use_states_for_predictor: false
+  predictor_inference_consistent: true
+  predictor_aux_policy: inference_consistent
+  predictor_loss_scope: future_only
+  num_observed_frames: 4
+  state_dim: 8
+  use_drive_command: false
+  predictor_use_z_ar_supervision: true
+  predictor_supervision_mode: tf_ar
+  use_parallel_predictor: false
+  predictor_static_graph: false
+planner:
+  use_planner: false
+  planner_type: diffusion
+  diff_hidden_dim: 384
+  diff_num_layers: 12
+  diff_num_heads: 12
+  diff_dropout: 0.0
+  diff_mlp_ratio: 4.0
+  diff_sde_beta_min: 0.1
+  diff_sde_beta_max: 20.0
+  diff_inference_steps: 20
+  diff_num_samples: 6
+  diff_traj_dim: 4
+  diff_dt: 0.5
+  diff_trajectory_token_mode: per_pose_token
+  diff_use_last_frame_only: false
+  diff_interleave_predictor_sampling: false
+  diff_train_prefix_conditioning: false
+  diff_train_min_prefix_frames: 1
+  diff_train_full_prefix_prob: 0.25
+  diff_num_modes: 6
+  diff_cls_loss_weight: 1.0
+  diff_reg_loss_weight: 1.0
+  diff_vel_loss_weight: 0.5
+  diff_yaw_loss_weight: 0.5
+  diff_conf_temperature: 1.5
+  diff_cls_th: 2.0
+  diff_cls_ignore: 0.2
+  awta_init_temperature: 8.0
+  awta_exp_base: 0.984
+  awta_min_temperature: 0.1
+  diff_use_anchor_frame: true
+  split_status_embedding: false
+  planner_loss_weight: 1
+  diff_adaln_version: v2
+  status_dim: 8
+  use_drive_command: false
+  use_action_history_for_planner: true
+  action_history_dim: 3
+validation_suite:
+  enabled: true
+  protocol_version: dynamic_rollout_validation_v2
+  horizons:
+  - 0
+  - 1
+  - 2
+  - 3
+  expected_weights:
+  - 0.25
+  - 0.25
+  - 0.25
+  - 0.25
+  primary_domain: real
+  primary_cohort: all
+  primary_protocol: full
+counterfactual_supervision:
+  enabled: true
+  protocol_version: cf_supervision_v2
+  imitation_policy: real_and_cf_safe
+  world_model_policy: all_valid
+  value_policy: all_valid
+  ego_hazard_types:
+  - 自车行为引起
+  - 非自车行为引起
+  hazard_target_mode: episode_ranking
+value_planning:
+  enabled: false
+  variant: a_method1
+  prefix_steps: 2
+  gamma: 0.99
+  lambda_return: 0.8
+  bootstrap_horizon: 3
+  progress_weight: 1.0
+  comfort_weight: 0.2
+  value_loss_weight: 1.0
+  td_loss_weight: 1.0
+  safe_floor_weight: 0.05
+  srpo_shaping_weight: 0.0
+  srpo_rho_mode: nearest_accident_latent
+  srpo_potential_based: true
+  pred_consistency_weight: 0.0
+  target_tau: 0.995
+method: lewm
+token_ae:
+  enabled: false
+stage: stage1_trainpose_predictor_monitored
+budget_controller:
+  enabled: false
+  policy_dist: beta
+  lambda_compute: 0.05
+  oracle_budget_grid:
+  - 0.0
+  - 0.2
+  - 0.4
+  - 0.6
+  - 0.8
+  - 1.0
+  schedule:
+    rollout_future_steps:
+    - 1
+    - full
+  hidden_dim: 128
+  feature_dim: 0
+  min_concentration: 1.0
+  bc_mse_weight: 0.1
+predictor_dynamic_rollout:
+  enabled: true
+  full_prefix_prob: 0.25
+  min_prefix_steps: 1
+  max_non_full_prefix_steps: null
+world_model:
+  enabled: true
+  sigreg_weight: 0.09
+  embed_dim: 192
+  projector_hidden_dim: 2048

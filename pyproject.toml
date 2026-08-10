@@ -1,0 +1,110 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rise-wam"
+version = "0.1.0"
+description = "RISE: Adaptive Imagination for World Action Models"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "einops",
+  "iopath",
+  "numpy",
+  "Pillow",
+  "PyYAML",
+  "scipy",
+  "timm",
+  "torch>=2",
+  "torchvision",
+]
+
+[project.optional-dependencies]
+train = [
+  "beartype",
+  "braceexpand",
+  "decord",
+  "fire",
+  "ftfy",
+  "h5py",
+  "hydra-core",
+  "matplotlib",
+  "omegaconf",
+  "opencv-python",
+  "pandas",
+  "peft",
+  "psutil",
+  "python-box",
+  "scikit-image",
+  "tensorboard",
+  "transformers",
+  "wandb",
+  "webdataset",
+]
+test = [
+  "beartype",
+  "black==24.4.2",
+  "braceexpand",
+  "build>=1.2,<2",
+  "decord",
+  "einops",
+  "fire",
+  "flake8==7.0.0",
+  "ftfy",
+  "h5py",
+  "hydra-core",
+  "iopath",
+  "isort==5.13.2",
+  "matplotlib",
+  "numpy",
+  "omegaconf",
+  "opencv-python",
+  "pandas",
+  "peft",
+  "Pillow",
+  "psutil",
+  "pytest",
+  "python-box",
+  "PyYAML",
+  "scikit-image",
+  "scipy",
+  "setuptools>=68",
+  "tensorboard",
+  "timm",
+  "torch>=2",
+  "torchvision",
+  "transformers",
+  "wandb",
+  "webdataset",
+  "wheel",
+]
+
+[tool.setuptools]
+include-package-data = false
+license-files = ["LICENSE", "licenses/*", "THIRD_PARTY_NOTICES.md"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "configs*", "src*", "tools*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"configs.navsim.scene_filters" = ["*.yaml"]
+
+[tool.isort]
+profile = "black"
+line_length = 119
+split_on_trailing_comma = false
+
+[tool.black]
+line-length = 119

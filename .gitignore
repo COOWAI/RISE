@@ -1,0 +1,57 @@
+# Training and evaluation outputs
+results/
+checkpoints/
+logs/
+wandb/
+tensorboard/
+runs/
+outputs/
+experiments/
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+build/
+dist/
+sdist/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Model artifacts
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# Local configuration and temporary files
+.env
+.env.local
+*.env
+*.tmp
+*.log
+.ipynb_checkpoints/
+*.ipynb
+
+# Editor and operating-system files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

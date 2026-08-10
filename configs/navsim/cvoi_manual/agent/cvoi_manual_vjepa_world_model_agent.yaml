@@ -1,0 +1,19 @@
+_target_: app.vjepa_cowa_world_model.evaluation.navsim_agent.VJEPAWorldModelAgent
+_convert_: all
+
+trajectory_sampling:
+  _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+  _convert_: all
+  time_horizon: 4
+  interval_length: 0.5
+
+checkpoint_path: ""
+training_config_path: ""
+encoder_checkpoint_path: ""
+proposal_checkpoint_path: ""
+cvoi_manual_navtrain_gate_config_path: null
+forward_mode: stage12
+crop_size: 256
+camera_name: cam_f0
+num_history_frames: 4
+device: cuda
